@@ -10,8 +10,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MSS.API.Gateway.OcelotMiddlewares;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Cache.Middleware;
+using Ocelot.Configuration.Creator;
+using Ocelot.Configuration.Repository;
+using Ocelot.DownstreamRouteFinder.Middleware;
+using Ocelot.DownstreamUrlCreator.Middleware;
+using Ocelot.Errors.Middleware;
+using Ocelot.Headers.Middleware;
+using Ocelot.LoadBalancer.Middleware;
+using Ocelot.Middleware.Pipeline;
+using Ocelot.Request.Middleware;
+using Ocelot.Requester.Middleware;
+using Ocelot.RequestId.Middleware;
+using Ocelot.Responder.Middleware;
 using Serilog;
 using Serilog.Events;
 
@@ -88,7 +102,26 @@ namespace MSS.API.Gateway
             //app.UseStaticFiles();
             //app.UseCookiePolicy();
             app.UseCors("AllowAll");
-            app.UseOcelot();
+            //app.UseOcelot();
+            app.UseOcelotWhenRouteMatch((ocelotBuilder, pipelineConfiguration) =>
+            {
+                // This is registered to catch any global exceptions that are not handled
+                // It also sets the Request Id if anything is set globally
+                //ocelotBuilder.UseExceptionHandlerMiddleware();
+                //// This is registered first so it can catch any errors and issue an appropriate response
+                //ocelotBuilder.UseResponderMiddleware();
+                //ocelotBuilder.UseDownstreamRouteFinderMiddleware();
+                //ocelotBuilder.UseDownstreamRequestInitialiser();
+                //ocelotBuilder.UseRequestIdMiddleware();
+                //ocelotBuilder.UseMiddleware<ClaimsToHeadersMiddleware>();
+                //ocelotBuilder.UseLoadBalancingMiddleware();
+                //ocelotBuilder.UseDownstreamUrlCreatorMiddleware();
+                //ocelotBuilder.UseOutputCacheMiddleware();
+                //ocelotBuilder.UseMiddleware<HttpRequesterMiddleware>();
+                // cors headers
+                //ocelotBuilder.UseMiddleware<CorsMiddleware>();
+                ocelotBuilder.UseMiddleware<HttpResponderMiddleware>();
+            });
             //app.UseMvc();
             loggerFactory.AddSerilog();
         }
