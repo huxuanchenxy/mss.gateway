@@ -20,6 +20,12 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MSS\apiservices\Operlog\MSS.API.Operlog.Dao\MSS.API.Operlog.Dao.csproj" />
+    <ProjectReference Include="..\..\MSS\apiservices\Operlog\MSS.API.Operlog.Model\MSS.API.Operlog.Model.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
     <Content Update="configuration.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
