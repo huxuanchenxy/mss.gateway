@@ -1,0 +1,76 @@
+﻿{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/v1/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.89.36.93",
+          "Port": 3851
+        }
+      ],
+      "UpstreamPathTemplate": "/authapi/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "ReRoutesCaseSensitive": false,
+
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MssServiceKey",
+        "AllowedScopes": [ "MssService" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.89.36.94",
+          "Port": 3851
+        }
+      ],
+      "UpstreamPathTemplate": "/orgapi/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "ReRoutesCaseSensitive": false,
+
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MssServiceKey",
+        "AllowedScopes": [ "MssService" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.89.36.187",
+          "Port": 3851
+        },
+        {
+          "Host": "10.89.36.187",
+          "Port": 3852
+        }
+      ],
+      "UpstreamPathTemplate": "/testapi/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "ReRoutesCaseSensitive": false,
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
+      "ServiceName": "ServiceB",
+      "UseServiceDiscovery": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MssServiceKey",
+        "AllowedScopes": [ "MssService" ]
+      }
+    }
+
+  ],
+
+  "GlobalConfiguration": {
+
+    "ServiceDiscoveryProvider": {
+      "Host": "10.89.36.204",
+      "Port": 5800
+    }
+
+  }
+}
