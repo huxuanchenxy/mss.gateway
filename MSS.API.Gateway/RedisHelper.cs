@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-public class RedisMSSHelper {
+public class RedisHelper {
 
 	private static CSRedisClient _instance;
 	/// <summary>

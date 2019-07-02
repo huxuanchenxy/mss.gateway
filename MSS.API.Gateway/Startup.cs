@@ -33,8 +33,17 @@ namespace MSS.API.Gateway
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
+            //var builder = new ConfigurationBuilder()
+            //    .SetBasePath(env.ContentRootPath)
+            //    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            //    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            //    // .AddJsonFile("hosting.json", optional: true)
+            //    .AddJsonFile("configuration.json")
+            //    .AddEnvironmentVariables();
+
+            //Configuration = builder.Build();
             Configuration = configuration;
             var logger = new LoggerConfiguration()
 
@@ -102,26 +111,60 @@ namespace MSS.API.Gateway
             //app.UseStaticFiles();
             //app.UseCookiePolicy();
             app.UseCors("AllowAll");
-            //app.UseOcelot();
-            app.UseOcelotWhenRouteMatch((ocelotBuilder, pipelineConfiguration) =>
-            {
-                // This is registered to catch any global exceptions that are not handled
-                // It also sets the Request Id if anything is set globally
-                //ocelotBuilder.UseExceptionHandlerMiddleware();
-                //// This is registered first so it can catch any errors and issue an appropriate response
-                //ocelotBuilder.UseResponderMiddleware();
-                //ocelotBuilder.UseDownstreamRouteFinderMiddleware();
-                //ocelotBuilder.UseDownstreamRequestInitialiser();
-                //ocelotBuilder.UseRequestIdMiddleware();
-                //ocelotBuilder.UseMiddleware<ClaimsToHeadersMiddleware>();
-                //ocelotBuilder.UseLoadBalancingMiddleware();
-                //ocelotBuilder.UseDownstreamUrlCreatorMiddleware();
-                //ocelotBuilder.UseOutputCacheMiddleware();
-                //ocelotBuilder.UseMiddleware<HttpRequesterMiddleware>();
-                // cors headers
-                //ocelotBuilder.UseMiddleware<CorsMiddleware>();
-                ocelotBuilder.UseMiddleware<HttpResponderMiddleware>();
-            });
+            app.UseOcelot();
+
+            //app.Map(new PathString("/ocelot/admin/configuration"), appBuilder =>
+            //{
+            //    appBuilder.Use(async (context, next) =>
+            //    {
+            //        // WARN: this api should be protected with permissions
+            //        var configurationRepo =
+            //            context.RequestServices.GetRequiredService<IFileConfigurationRepository>();
+            //        var ocelotConfiguration = await configurationRepo.Get();
+            //        var logger = context.RequestServices.GetRequiredService<ILoggerFactory>().CreateLogger("OcelotConfiguration");
+            //        if (!ocelotConfiguration.IsError)
+            //        {
+            //            var internalConfigurationRepo = context.RequestServices.GetRequiredService<IInternalConfigurationRepository>();
+            //            var internalConfigurationCreator =
+            //                context.RequestServices.GetRequiredService<IInternalConfigurationCreator>();
+            //            var internalConfiguration = await internalConfigurationCreator.Create(ocelotConfiguration.Data);
+            //            if (!internalConfiguration.IsError)
+            //            {
+            //                internalConfigurationRepo.AddOrReplace(internalConfiguration.Data);
+            //                context.Response.StatusCode = 200;
+            //                return;
+            //            }
+            //            else
+            //            {
+            //                logger.LogError($"update ocelot configuration error, error in create ocelot internal configuration, error messages:{string.Join(", ", ocelotConfiguration.Errors)}");
+            //            }
+            //        }
+            //        else
+            //        {
+            //            logger.LogError($"update ocelot configuration error, error in get ocelot configuration from configurationRepo, error messages:{string.Join(", ", ocelotConfiguration.Errors)}");
+            //        }
+            //        context.Response.StatusCode = 500;
+            //    });
+            //});
+            //app.UseOcelotWhenRouteMatch((ocelotBuilder, pipelineConfiguration) =>
+            //{
+            //    // This is registered to catch any global exceptions that are not handled
+            //    // It also sets the Request Id if anything is set globally
+            //    //ocelotBuilder.UseExceptionHandlerMiddleware();
+            //    //// This is registered first so it can catch any errors and issue an appropriate response
+            //    //ocelotBuilder.UseResponderMiddleware();
+            //    //ocelotBuilder.UseDownstreamRouteFinderMiddleware();
+            //    //ocelotBuilder.UseDownstreamRequestInitialiser();
+            //    //ocelotBuilder.UseRequestIdMiddleware();
+            //    ////ocelotBuilder.UseMiddleware<ClaimsToHeadersMiddleware>();
+            //    ////ocelotBuilder.UseLoadBalancingMiddleware();
+            //    //ocelotBuilder.UseDownstreamUrlCreatorMiddleware();
+            //    //ocelotBuilder.UseOutputCacheMiddleware();
+            //    //ocelotBuilder.UseMiddleware<HttpRequesterMiddleware>();
+            //    // cors headers
+            //    //ocelotBuilder.UseMiddleware<CorsMiddleware>();
+            //    ocelotBuilder.UseMiddleware<HttpResponderMiddleware>();
+            //});
             //app.UseMvc();
             loggerFactory.AddSerilog();
         }

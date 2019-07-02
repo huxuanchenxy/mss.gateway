@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace MSS.API.Gateway
+namespace MSS.Web.Auth
 {
     public class Program
     {
@@ -31,18 +31,6 @@ namespace MSS.API.Gateway
                                               //    listenOptions.UseHttps("server.pfx", "password");
                                               //});
                                           })
-                            .ConfigureAppConfiguration((hostingContext, config) =>
-                            {
-                                config
-                                    .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
-                                    .AddJsonFile("appsettings.json", true, true)
-                                    //.AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                                    .AddJsonFile("ocelot.json", true, true)
-                                    //.AddJsonFile($"configuration.{hostingContext.HostingEnvironment.EnvironmentName}.json")
-                                    .AddEnvironmentVariables()
-
-                                    ;
-                            })
                             .Build();
         }
     }

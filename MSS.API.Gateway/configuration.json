@@ -5,8 +5,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.103",
-          "Port": 8081
+          "Host": "10.89.36.204",
+          "Port": 8002
         }
       ],
       "UpstreamPathTemplate": "/authapi/{url}",
@@ -23,8 +23,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.103",
-          "Port": 8082
+          "Host": "10.89.36.204",
+          "Port": 8001
         }
       ],
       "UpstreamPathTemplate": "/orgapi/{url}",
@@ -79,24 +79,20 @@
       "UpstreamPathTemplate": "/operlogapi/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
       "ReRoutesCaseSensitive": false
-    },
+    }
+         ,
     {
       "DownstreamPathTemplate": "/api/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.103",
-          "Port": 8083
+          "Host": "10.89.36.204",
+          "Port": 8004
         }
       ],
       "UpstreamPathTemplate": "/areaapi/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
-      "ReRoutesCaseSensitive": false,
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "MssServiceKey",
-        "AllowedScopes": [ "MssService" ]
-      }
-
+      "ReRoutesCaseSensitive": false
     }
 
 
