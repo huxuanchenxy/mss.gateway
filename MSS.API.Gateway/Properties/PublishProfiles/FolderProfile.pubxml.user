@@ -6,6 +6,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\fiyoung\project\mss\source\MSS\MSS.API.Gateway\bin\Debug\netcoreapp2.2\publish\</_PublishTargetUrl>
+    <_PublishTargetUrl>D:\fiyoung\shdq\GatewayProject\MSS.API.Gateway\bin\Debug\netcoreapp2.2\publish\</_PublishTargetUrl>
   </PropertyGroup>
 </Project>

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Http;
 using System.Net.NetworkInformation;
+using System.Collections.Generic;
 
 namespace MSS.API.Gateway.OcelotMiddlewares
 {
@@ -21,9 +22,31 @@ namespace MSS.API.Gateway.OcelotMiddlewares
         {
             _configuration = configuration;
         }
+
+        private static Dictionary<string, string> dic = new Dictionary<string, string>()
+        {   { "actiongroup", "权限组管理" },
+            { "action","权限管理" },
+            { "role","角色管理" },
+            { "user","人员管理" },
+            { "code","代码管理" },
+            { "organization","组织架构" },
+            { "eqptype","设备类型定义" },
+            { "area2","位置配置" },
+            { "equipment","设备定义" },
+            { "area1","站区配置" },
+            { "warnsetting","预警设置" },
+             { "expert","专家库查询" },
+            { "login","登录模块" }
+        };
+
+        private static Dictionary<string, string> dic2 = new Dictionary<string, string>()
+        {   { "post", "新增" },
+            { "put","修改" },
+            { "delete","删除" },
+        };
+
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            
             //do stuff and optionally call the base handler..
             var response = await base.SendAsync(request, cancellationToken);
             if (response.StatusCode == HttpStatusCode.OK)
@@ -60,6 +83,9 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                             HttpContextAccessor context = new HttpContextAccessor();
                                             var ip = context.HttpContext?.Connection.RemoteIpAddress.ToString();
                                             var macaddr = LocalMacAddress;
+
+                                            controllername = dic[controllername.ToLower()];
+                                            methodname = dic2[methodname.ToLower()];
                                             UserOperationLog parmobj = new UserOperationLog()
                                             {
                                                 controller_name = controllername,
