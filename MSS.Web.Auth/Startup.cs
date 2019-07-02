@@ -12,6 +12,8 @@ using Microsoft.Extensions.Options;
 using MSS.API.Dao;
 using MSS.API.Model.DTO;
 using MSS.Web.Auth.Infrastructure;
+using Serilog;
+using Serilog.Events;
 
 namespace MSS.Web.Auth
 {
@@ -20,6 +22,18 @@ namespace MSS.Web.Auth
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            var logger = new LoggerConfiguration()
+
+.MinimumLevel.Debug()
+
+        //.WriteTo.Logger(l => l.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information).WriteTo.RollingFile(@"Logs\Info-{Date}.log"))
+        .WriteTo.Logger(l => l.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Debug).WriteTo.RollingFile(@"Logs/Debug-{Date}.log"))
+
+        .WriteTo.Logger(l => l.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Error).WriteTo.RollingFile(@"Logs/Error-{Date}.log"))
+//  .WriteTo.Logger(l => l.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Fatal).WriteTo.RollingFile(@"Logs\Fatal-{Date}.log"))
+
+.CreateLogger();
+            Log.Logger = logger;
         }
 
         public IConfiguration Configuration { get; }
