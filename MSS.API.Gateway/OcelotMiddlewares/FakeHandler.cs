@@ -48,10 +48,15 @@ namespace MSS.API.Gateway.OcelotMiddlewares
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             //do stuff and optionally call the base handler..
+
             var response = await base.SendAsync(request, cancellationToken);
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK && request.Method.ToString().ToUpper() != "GET")
             {
                 string url = request.RequestUri.AbsolutePath;
+                if (url.IndexOf("/v1") >= 0)
+                {
+                    url = url.Replace("/v1", "");
+                }
                 string[] urlarr = url.Split("/");
                 if (urlarr.Length >= 4)
                 {
@@ -104,16 +109,16 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                 }
                                 catch (Exception ex)
                                 {
-                                    
+
                                 }
                             }
                         }
-                            
+
                     }
-                    
+
                 }
 
-                
+
             }
             return response;
         }

@@ -16,7 +16,10 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "MssServiceKey",
         "AllowedScopes": [ "MssService" ]
-      }
+      },
+      "DelegatingHandlers": [
+        "FakeHandler"
+      ]
     },
     {
       "DownstreamPathTemplate": "/api/v1/{url}",
@@ -34,26 +37,12 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "MssServiceKey",
         "AllowedScopes": [ "MssService" ]
-      }
+      },
+      "DelegatingHandlers": [
+        "FakeHandler"
+      ]
     },
-    {
-      "DownstreamPathTemplate": "/api/v1/{url}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "10.89.36.187",
-          "Port": 3851
-        }
-      ],
-      "UpstreamPathTemplate": "/testapi/{url}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
-      "ReRoutesCaseSensitive": false,
-
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "MssServiceKey",
-        "AllowedScopes": [ "MssService" ]
-      }
-    },
+    
     {
       "DownstreamPathTemplate": "/idsapi/{url}",
       "DownstreamScheme": "http",
@@ -95,7 +84,10 @@
       ],
       "UpstreamPathTemplate": "/areaapi/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
-      "ReRoutesCaseSensitive": false
+      "ReRoutesCaseSensitive": false,
+      "DelegatingHandlers": [
+        "FakeHandler"
+      ]
     }
 
 
