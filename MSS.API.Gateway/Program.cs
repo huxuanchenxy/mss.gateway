@@ -37,8 +37,8 @@ namespace MSS.API.Gateway
                                     .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
                                     .AddJsonFile("appsettings.json", true, true)
                                     //.AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                                    .AddJsonFile("ocelot.json", true, true)
-                                    //.AddJsonFile($"configuration.{hostingContext.HostingEnvironment.EnvironmentName}.json")
+                                    //.AddJsonFile("ocelot.json", true, true)
+                                    .AddJsonFile($"configuration.json")
                                     .AddEnvironmentVariables()
 
                                     ;

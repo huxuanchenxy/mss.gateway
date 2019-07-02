@@ -28,6 +28,7 @@ using Ocelot.RequestId.Middleware;
 using Ocelot.Responder.Middleware;
 using Serilog;
 using Serilog.Events;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace MSS.API.Gateway
 {
@@ -82,11 +83,14 @@ namespace MSS.API.Gateway
 
             };
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddAuthentication("Bearer")
             .AddIdentityServerAuthentication("MssServiceKey", isaOptMss)
             ;
 
-            services.AddOcelot(Configuration);
+            services.AddOcelot(Configuration)
+                    .AddDelegatingHandler<FakeHandler>();
 
             //¿çÓò Cors
             services.AddCors(options =>
@@ -107,7 +111,10 @@ namespace MSS.API.Gateway
             {
                 app.UseExceptionHandler("/Error");
             }
-
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
             //app.UseStaticFiles();
             //app.UseCookiePolicy();
             app.UseCors("AllowAll");

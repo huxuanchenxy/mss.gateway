@@ -65,7 +65,10 @@
       ],
       "UpstreamPathTemplate": "/idsapi/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
-      "ReRoutesCaseSensitive": false
+      "ReRoutesCaseSensitive": false,
+      "DelegatingHandlers": [
+        "FakeHandler"
+      ]
     },
     {
       "DownstreamPathTemplate": "/api/v1/{url}",
