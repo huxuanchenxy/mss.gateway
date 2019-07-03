@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using MSS.API.Dao;
 using MSS.API.Model.DTO;
 using MSS.Web.Auth.Infrastructure;
+using MSS.Web.Auth.redis;
 using Serilog;
 using Serilog.Events;
 
@@ -41,9 +42,12 @@ namespace MSS.Web.Auth
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            services.AddCSRedisCache(options =>
+            {
+                options.ConnectionString = this.Configuration["redis:ConnectionString"];
+            });
             services.AddDapper(Configuration);
-            services.AddRedis(Configuration);
+            //services.AddRedis(Configuration);
             services.AddEssentialService();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

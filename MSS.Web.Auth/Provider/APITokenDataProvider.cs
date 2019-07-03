@@ -49,7 +49,7 @@ namespace MSS.Web.Auth.Provider
         }
         public async Task<TokenResponse> GetApiTokenAsync(TokenRequest req)
         {
-            
+
 
             TokenResponse ret = new TokenResponse();
             var url = Configuration["Ids:url"];
@@ -66,7 +66,7 @@ namespace MSS.Web.Auth.Provider
             dic.Add("client_secret", client_secret);
             dic.Add("grant_type", grant_type);
             dic.Add("username", req.username);
-            dic.Add("password",req.password);
+            dic.Add("password", req.password);
             dic.Add("scope", scope);
 
             FormUrlEncodedContent data = new FormUrlEncodedContent(dic);
@@ -103,25 +103,25 @@ namespace MSS.Web.Auth.Provider
                     redisobj.user_name = user.user_name;
                     //await _cache.SetStringAsync(ret.access_token,user.id.ToString());
                     //await _cache.SetStringAsync(user.id.ToString(),JsonConvert.SerializeObject(redisobj));
-                    using (var csredis = new CSRedis.CSRedisClient(Configuration["redis:ConnectionString"]))
-                    {
-                        await csredis.SetAsync(ret.access_token, user.id.ToString());
-                        await csredis.SetAsync(user.id.ToString(), JsonConvert.SerializeObject(redisobj));
-                    }
-                        
+                    //using (var csredis = new CSRedis.CSRedisClient(Configuration["redis:ConnectionString"]))
+                    //{
+                    await _cache.SetStringAsync(ret.access_token, user.id.ToString(), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(int.Parse(Configuration["redis:ttl"])) });
+                    await _cache.SetStringAsync(user.id.ToString(), JsonConvert.SerializeObject(redisobj),null);
+                    //}
+
                 }
                 else
                 {
                     ret.code = -1;
                 }
-                
-                
+
+
             }
             catch (Exception ex)
             {
                 ret.code = -2;
                 ret.error_description = ex.Message.ToString();
-                
+
             }
             return ret;
         }
