@@ -14,15 +14,18 @@ using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using Serilog;
 using Serilog.Events;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace MSS.API.Gateway.OcelotMiddlewares
 {
     public class FakeHandler : DelegatingHandler
     {
         public IConfiguration _configuration { get; }
-        public FakeHandler(IConfiguration configuration)
+        private IHttpContextAccessor _accessor;
+        public FakeHandler(IConfiguration configuration, IHttpContextAccessor accessor)
         {
             _configuration = configuration;
+            _accessor = accessor;
         }
 
         private static Dictionary<string, string> dic = new Dictionary<string, string>()
@@ -59,10 +62,11 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                 .WriteTo.File("Logs/handler.log", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
-            Log.Information("fake start");
+            
 
             if (response.StatusCode == HttpStatusCode.OK && request.Method.ToString().ToUpper() != "GET")
             {
+                Log.Information("fake start");
                 string url = request.RequestUri.AbsolutePath;
                 Log.Information(url);
                 if (url.IndexOf("/v1") >= 0)
@@ -103,9 +107,9 @@ namespace MSS.API.Gateway.OcelotMiddlewares
 
                                             string httpurl = _configuration["operlog:posturl"];
 
-                                            HttpContextAccessor context = new HttpContextAccessor();
-                                            var ip = context.HttpContext?.Connection.RemoteIpAddress.ToString();
-                                            var macaddr = LocalMacAddress;
+
+                                            var ip = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                                            var macaddr = GetMacAddress();
 
                                             controllername = dic[controllername.ToLower()];
                                             methodname = dic2[methodname.ToLower()];
@@ -138,10 +142,10 @@ namespace MSS.API.Gateway.OcelotMiddlewares
 
                 }
 
-
+                Log.Information("fake end");
             }
 
-            Log.Information("fake end");
+            
             return response;
         }
 
@@ -183,6 +187,39 @@ namespace MSS.API.Gateway.OcelotMiddlewares
         {
             get
             {
+                NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+                String sMacAddress = string.Empty;
+                foreach (NetworkInterface adapter in nics)
+                {
+                    if (sMacAddress == String.Empty)// only return MAC Address from first card  
+                    {
+                        IPInterfaceProperties properties = adapter.GetIPProperties();
+                        sMacAddress = adapter.GetPhysicalAddress().ToString();
+                    }
+                }
+                return sMacAddress;
+            }
+        }
+        public string GetMacAddress()
+        {
+            try
+            {
+                NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
+                foreach (NetworkInterface ni in interfaces)
+                {
+                    return BitConverter.ToString(ni.GetPhysicalAddress().GetAddressBytes());
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return "00-00-00-00-00-00";
+        }
+
+        public static string LocalMacAddress2
+        {
+            get
+            {
                 string macadd = string.Empty;
 
                 NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
@@ -200,7 +237,7 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                         if (i != bytes.Length - 1)
                         {
                             //Console.Write("-");
-                            macadd += "-";
+                            macadd += ":";
                         }
                     }
                     break;//TODO

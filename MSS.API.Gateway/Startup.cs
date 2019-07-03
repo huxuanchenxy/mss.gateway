@@ -29,6 +29,8 @@ using Ocelot.Responder.Middleware;
 using Serilog;
 using Serilog.Events;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace MSS.API.Gateway
 {
@@ -83,7 +85,7 @@ namespace MSS.API.Gateway
 
             };
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddAuthentication("Bearer")
             .AddIdentityServerAuthentication("MssServiceKey", isaOptMss)
