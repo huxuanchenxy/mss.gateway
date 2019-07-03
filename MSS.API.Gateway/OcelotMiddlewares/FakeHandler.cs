@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Serilog;
 using Serilog.Events;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace MSS.API.Gateway.OcelotMiddlewares
 {
@@ -22,10 +23,12 @@ namespace MSS.API.Gateway.OcelotMiddlewares
     {
         public IConfiguration _configuration { get; }
         private IHttpContextAccessor _accessor;
-        public FakeHandler(IConfiguration configuration, IHttpContextAccessor accessor)
+        private IDistributedCache _cache;
+        public FakeHandler(IConfiguration configuration, IHttpContextAccessor accessor, IDistributedCache cache)
         {
             _configuration = configuration;
             _accessor = accessor;
+            _cache = cache;
         }
 
         private static Dictionary<string, string> dic = new Dictionary<string, string>()
@@ -62,7 +65,7 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                 .WriteTo.File("Logs/handler.log", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
-            
+
 
             if (response.StatusCode == HttpStatusCode.OK && request.Method.ToString().ToUpper() != "GET")
             {
@@ -92,44 +95,45 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                             {
                                 try
                                 {
-                                    using (var redis = new CSRedisClient(_configuration["redis:ConnectionString"]))
+                                    //using (var redis = new CSRedisClient(_configuration["redis:ConnectionString"]))
+                                    //{
+                                    Log.Information("redis start token:" + token);
+                                    //var userid = redis.Get(token);
+                                    var userid = _cache.GetString(token);
+                                    Log.Information("userid:" + userid);
+                                    //var userid = "3";
+                                    var userobj = JsonConvert.DeserializeObject<UserTokenResponse>(_cache.GetString(userid));
+                                    using (HttpClient client = new HttpClient())
                                     {
-                                        Log.Information("redis start:" + token);
-                                        var userid = redis.Get(token);
-                                        Log.Information("userid:" + userid);
-                                        //var userid = "3";
-                                        var userobj = JsonConvert.DeserializeObject<UserTokenResponse>(redis.Get(userid));
-                                        using (HttpClient client = new HttpClient())
+                                        Log.Information("httpclient start");
+                                        client.DefaultRequestHeaders.Accept.Clear();
+                                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                                        string httpurl = _configuration["operlog:posturl"];
+
+
+                                        var ip = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                                        var macaddr = GetMacAddress();
+
+                                        controllername = dic[controllername.ToLower()];
+                                        methodname = dic2[methodname.ToLower()];
+                                        UserOperationLog parmobj = new UserOperationLog()
                                         {
-                                            Log.Information("httpclient start");
-                                            client.DefaultRequestHeaders.Accept.Clear();
-                                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                                            controller_name = controllername,
+                                            action_name = actionname,
+                                            method_name = methodname,
+                                            acc_name = userobj.acc_name,
+                                            user_name = userobj.user_name,
+                                            ip = ip,
+                                            mac_add = macaddr
+                                        };
+                                        var content = new StringContent(JsonConvert.SerializeObject(parmobj), Encoding.UTF8, "application/json");
 
-                                            string httpurl = _configuration["operlog:posturl"];
-
-
-                                            var ip = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
-                                            var macaddr = GetMacAddress();
-
-                                            controllername = dic[controllername.ToLower()];
-                                            methodname = dic2[methodname.ToLower()];
-                                            UserOperationLog parmobj = new UserOperationLog()
-                                            {
-                                                controller_name = controllername,
-                                                action_name = actionname,
-                                                method_name = methodname,
-                                                acc_name = userobj.acc_name,
-                                                user_name = userobj.user_name,
-                                                ip = ip,
-                                                mac_add = macaddr
-                                            };
-                                            var content = new StringContent(JsonConvert.SerializeObject(parmobj), Encoding.UTF8, "application/json");
-
-                                            await client.PostAsync(httpurl, content);
-                                            Log.Information("httpclient end ");
-                                        }
-
+                                        await client.PostAsync(httpurl, content);
+                                        Log.Information("httpclient end ");
                                     }
+
+                                    //}
                                 }
                                 catch (Exception ex)
                                 {
@@ -145,7 +149,7 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                 Log.Information("fake end");
             }
 
-            
+
             return response;
         }
 
