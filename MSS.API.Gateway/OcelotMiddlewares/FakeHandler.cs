@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Http;
 using System.Net.NetworkInformation;
 using System.Collections.Generic;
+using Serilog;
+using Serilog.Events;
 
 namespace MSS.API.Gateway.OcelotMiddlewares
 {
@@ -50,9 +52,19 @@ namespace MSS.API.Gateway.OcelotMiddlewares
             //do stuff and optionally call the base handler..
 
             var response = await base.SendAsync(request, cancellationToken);
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                //.WriteTo.Console()
+                .WriteTo.File("Logs/handler.log", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            Log.Information("fake start");
+
             if (response.StatusCode == HttpStatusCode.OK && request.Method.ToString().ToUpper() != "GET")
             {
                 string url = request.RequestUri.AbsolutePath;
+                Log.Information(url);
                 if (url.IndexOf("/v1") >= 0)
                 {
                     url = url.Replace("/v1", "");
@@ -60,26 +72,32 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                 string[] urlarr = url.Split("/");
                 if (urlarr.Length >= 4)
                 {
+                    Log.Information("444");
                     string controllername = urlarr[2];
                     string actionname = urlarr[3];
                     string methodname = request.Method.ToString();
                     string header = request.Headers.Authorization.ToString();
                     if (!string.IsNullOrEmpty(header))
                     {
+                        Log.Information("header:" + header);
                         if (header.IndexOf("Bearer") >= 0)
                         {
                             var token = header.Replace("Bearer", "").Trim();
+                            Log.Information("token:" + token);
                             if (!string.IsNullOrEmpty(token))
                             {
                                 try
                                 {
                                     using (var redis = new CSRedisClient(_configuration["redis:ConnectionString"]))
                                     {
+                                        Log.Information("redis start:" + token);
                                         var userid = redis.Get(token);
+                                        Log.Information("userid:" + userid);
                                         //var userid = "3";
                                         var userobj = JsonConvert.DeserializeObject<UserTokenResponse>(redis.Get(userid));
                                         using (HttpClient client = new HttpClient())
                                         {
+                                            Log.Information("httpclient start");
                                             client.DefaultRequestHeaders.Accept.Clear();
                                             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -102,14 +120,16 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                                 mac_add = macaddr
                                             };
                                             var content = new StringContent(JsonConvert.SerializeObject(parmobj), Encoding.UTF8, "application/json");
+
                                             await client.PostAsync(httpurl, content);
+                                            Log.Information("httpclient end ");
                                         }
 
                                     }
                                 }
                                 catch (Exception ex)
                                 {
-
+                                    Log.Error(ex.Message + " " + ex.StackTrace);
                                 }
                             }
                         }
@@ -120,6 +140,8 @@ namespace MSS.API.Gateway.OcelotMiddlewares
 
 
             }
+
+            Log.Information("fake end");
             return response;
         }
 
