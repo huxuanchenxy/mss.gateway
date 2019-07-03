@@ -31,6 +31,7 @@ using Serilog.Events;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using MSS.API.Gateway.redis;
 
 namespace MSS.API.Gateway
 {
@@ -67,11 +68,15 @@ namespace MSS.API.Gateway
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+            //    options.CheckConsentNeeded = context => true;
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
+            services.AddCSRedisCache(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.ConnectionString = this.Configuration["redis:ConnectionString"];
             });
 
             Action<IdentityServerAuthenticationOptions> isaOptMss = option =>
