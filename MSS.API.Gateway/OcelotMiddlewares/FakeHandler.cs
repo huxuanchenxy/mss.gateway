@@ -83,7 +83,11 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                     string controllername = urlarr[2];
                     string actionname = urlarr[3];
                     string methodname = request.Method.ToString();
-                    string header = request.Headers.Authorization.ToString();
+                    string header = string.Empty;
+                    if (request.Headers.Authorization != null)
+                    {
+                        header = request.Headers.Authorization.ToString();
+                    }
                     if (!string.IsNullOrEmpty(header))
                     {
                         Log.Information("header:" + header);
@@ -125,7 +129,9 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                             acc_name = userobj.acc_name,
                                             user_name = userobj.user_name,
                                             ip = ip,
-                                            mac_add = macaddr
+                                            mac_add = macaddr,
+                                            request_description = request.Content.ReadAsStringAsync().Result,
+                                            response_description = response.Content.ReadAsStringAsync().Result
                                         };
                                         var content = new StringContent(JsonConvert.SerializeObject(parmobj), Encoding.UTF8, "application/json");
 
@@ -184,6 +190,8 @@ namespace MSS.API.Gateway.OcelotMiddlewares
             public DateTime updated_time { get; set; }
             public int updated_by { get; set; }
             public int is_del { get; set; }
+            public string request_description { get; set; }
+            public string response_description { get; set; }
 
         }
 
