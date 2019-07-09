@@ -121,6 +121,11 @@ namespace MSS.API.Gateway.OcelotMiddlewares
 
                                         controllername = dic[controllername.ToLower()];
                                         methodname = dic2[methodname.ToLower()];
+                                        string requestContent = request.Content.ReadAsStringAsync().Result;
+                                        if (string.IsNullOrEmpty(requestContent))
+                                        {
+                                            requestContent = url;
+                                        }
                                         UserOperationLog parmobj = new UserOperationLog()
                                         {
                                             controller_name = controllername,
@@ -130,7 +135,7 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                             user_name = userobj.user_name,
                                             ip = ip,
                                             mac_add = macaddr,
-                                            request_description = request.Content.ReadAsStringAsync().Result,
+                                            request_description = requestContent,
                                             response_description = response.Content.ReadAsStringAsync().Result
                                         };
                                         var content = new StringContent(JsonConvert.SerializeObject(parmobj), Encoding.UTF8, "application/json");
