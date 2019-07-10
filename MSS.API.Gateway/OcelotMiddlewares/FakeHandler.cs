@@ -126,6 +126,19 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                         {
                                             requestContent = url;
                                         }
+                                        string responseContent = response.Content.ReadAsStringAsync().Result;
+                                        try
+                                        {
+                                            var retjson = JsonConvert.DeserializeObject<ApiResult>(responseContent);
+                                            if (retjson != null)
+                                            {
+                                                if (retjson.code == Code.Success)
+                                                {
+                                                    responseContent = "操作成功 返回数据:" + JsonConvert.SerializeObject(retjson.data) ;
+                                                }
+                                            }
+                                        }
+                                        catch (Exception ex) { responseContent = "响应格式不标准"; }
                                         UserOperationLog parmobj = new UserOperationLog()
                                         {
                                             controller_name = controllername,
@@ -136,7 +149,7 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                             ip = ip,
                                             mac_add = macaddr,
                                             request_description = requestContent,
-                                            response_description = response.Content.ReadAsStringAsync().Result
+                                            response_description = responseContent
                                         };
                                         var content = new StringContent(JsonConvert.SerializeObject(parmobj), Encoding.UTF8, "application/json");
 
@@ -166,7 +179,20 @@ namespace MSS.API.Gateway.OcelotMiddlewares
 
 
 
+        public enum Code
+        {
+            Success = 0,
+            Failure = 1,
+            DataIsExist = 2,
+            DataIsnotExist = 3,
 
+        }
+        public class ApiResult
+        {
+            public Code code { get; set; }
+            public string msg { get; set; }
+            public object data { get; set; }
+        }
         public class UserTokenResponse
         {
             public string acc_name { get; set; }
