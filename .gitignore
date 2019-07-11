@@ -1,11 +1,8 @@
-/MSS.API.Gateway/bin
-/MSS.API.Gateway/Logs
-/MSS.API.Gateway/obj
-/MSS.API.Gateway/.vs
-/MSS.API.Dao/bin
-/MSS.API.Dao/obj
-/MSS.API.Model/bin
-/MSS.API.Model/obj
-/MSS.Web.Auth/.vs
-/MSS.Web.Auth/bin
-/MSS.Web.Auth/obj
+/.vs
+
+# compiled files
+obj
+bin
+# user files
+.user
+.suo
