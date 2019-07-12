@@ -32,6 +32,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using MSS.API.Gateway.redis;
+using Ocelot.Provider.Consul;
 
 namespace MSS.API.Gateway
 {
@@ -97,7 +98,9 @@ namespace MSS.API.Gateway
             ;
 
             services.AddOcelot(Configuration)
+                    .AddConsul()
                     .AddDelegatingHandler<FakeHandler>();
+                    
 
             //¿çÓò Cors
             services.AddCors(options =>
@@ -125,7 +128,7 @@ namespace MSS.API.Gateway
             //app.UseStaticFiles();
             //app.UseCookiePolicy();
             app.UseCors("AllowAll");
-            app.UseOcelot();
+            app.UseOcelot().Wait();
 
             //app.Map(new PathString("/ocelot/admin/configuration"), appBuilder =>
             //{
