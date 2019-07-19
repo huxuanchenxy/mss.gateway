@@ -6,6 +6,7 @@ using MSS.API.Dao.Interface;
 using MSS.API.Model;
 using MSS.API.Model.Data;
 using MSS.API.Model.DTO;
+using MSS.Common.Consul;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,17 +28,19 @@ namespace MSS.Web.Auth.Provider
         private readonly IUserRepo<User> _userRepo;
 
         private readonly IDistributedCache _cache;
+        private readonly IServiceDiscoveryProvider _consulclient;
 
         static APITokenDataProvider()
         {
             client = new HttpClient();
         }
-        public APITokenDataProvider(IConfiguration configuration, IUserRepo<User> userRepo, IDistributedCache cache)
+        public APITokenDataProvider(IConfiguration configuration, IUserRepo<User> userRepo, IDistributedCache cache, IServiceDiscoveryProvider consulclient)
         {
             //_logger = logger;
             Configuration = configuration;
             _userRepo = userRepo;
             _cache = cache;
+            _consulclient = consulclient;
         }
 
 
@@ -75,38 +78,47 @@ namespace MSS.Web.Auth.Provider
 
             try
             {
-                User user = await _userRepo.IsValid(new User() { acc_name = req.username });
-                if (user == null)
+                //User user = await _userRepo.IsValid(new User() { acc_name = req.username });
+                //if (user == null)
+                //{
+                //    throw new Exception("No this user");
+                //}
+                //if (user != null)
+                //{
+                //    Encrypt en = new Encrypt();
+                //    var md5 = en.DoEncrypt(req.password, user.random_num);
+                //    if (md5 != user.password)
+                //    {
+                //        throw new Exception("Wrong password");
+                //    }
+                //}
+
+                string userurl = await _consulclient.GetServiceAsync("AuthService");
+                userurl = userurl + "/api/v1/User/Login/" + req.username + "/" + req.password;
+                var userresponse = await client.GetAsync(userurl);
+                var userresponseString = await userresponse.Content.ReadAsStringAsync();
+                var userrretobj = JsonConvert.DeserializeObject<ApiRet>(userresponseString);
+                if (userrretobj != null && userrretobj.code != 0)
                 {
-                    throw new Exception("No this user");
+                    throw new Exception("用户名或者密码错误");
                 }
-                if (user != null)
-                {
-                    Encrypt en = new Encrypt();
-                    var md5 = en.DoEncrypt(req.password, user.random_num);
-                    if (md5 != user.password)
-                    {
-                        throw new Exception("Wrong password");
-                    }
-                }
+                var retuserid = userrretobj.data;
+                //var retuserid = "1";
                 var response = await client.PostAsync(url, data);
                 response.EnsureSuccessStatusCode();
                 var responseString = await response.Content.ReadAsStringAsync();
                 ret = JsonConvert.DeserializeObject<TokenResponse>(responseString);
+                
                 if (string.IsNullOrEmpty(ret.error))
                 {
                     ret.code = 0;
-                    ret.username = user.acc_name;
-                    ret.userid = user.id;
-                    UserTokenResponse redisobj = new UserTokenResponse();
-                    redisobj.acc_name = user.acc_name;
-                    redisobj.user_name = user.user_name;
+                    //ret.username = req.username;
                     //await _cache.SetStringAsync(ret.access_token,user.id.ToString());
                     //await _cache.SetStringAsync(user.id.ToString(),JsonConvert.SerializeObject(redisobj));
                     //using (var csredis = new CSRedis.CSRedisClient(Configuration["redis:ConnectionString"]))
                     //{
-                    await _cache.SetStringAsync(ret.access_token, user.id.ToString(), new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(int.Parse(Configuration["redis:ttl"])) });
-                    await _cache.SetStringAsync(user.id.ToString(), JsonConvert.SerializeObject(redisobj),null);
+                    await _cache.SetStringAsync(ret.access_token, retuserid, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(int.Parse(Configuration["redis:ttl"])) });
+                    //await _cache.SetStringAsync(user.id.ToString(), JsonConvert.SerializeObject(redisobj),null);
                     //}
 
                 }
@@ -124,6 +136,12 @@ namespace MSS.Web.Auth.Provider
 
             }
             return ret;
+        }
+
+        public class ApiRet
+        {
+            public int code { get; set; }
+            public string data { get; set; }
         }
 
         public async Task<TokenResponse> GetApiNewTokenAsync(TokenRequest req)

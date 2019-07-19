@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MSS.API.Dao;
 using MSS.API.Model.DTO;
+using MSS.Common.Consul;
 using MSS.Web.Auth.Infrastructure;
 using MSS.Web.Auth.redis;
 using Serilog;
@@ -49,6 +50,7 @@ namespace MSS.Web.Auth
             services.AddDapper(Configuration);
             //services.AddRedis(Configuration);
             services.AddEssentialService();
+            services.AddConsulService(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
