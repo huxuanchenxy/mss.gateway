@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Consul;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace MSS.Common.Consul
 {
@@ -47,25 +48,39 @@ namespace MSS.Common.Consul
 
         public async Task<string> GetServiceAsync(string serviceName)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                //.WriteTo.Console()
+                .WriteTo.File("ConsolLogs/GetService.log", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
             string consulurl = "http://" + Configuration["ConsulServiceEntity:ConsulIP"] + ":" + Configuration["ConsulServiceEntity:ConsulPort"];
+
+            Log.Information("Start Find Consul Address");
             var consuleClient = new ConsulClient(consulConfig =>
             {
                 consulConfig.Address = new Uri(consulurl);
             });
             string ret = string.Empty;
             var data = await consuleClient.Agent.Services();
-                
+
+            Log.Information("consuleClient return data:" + JsonConvert.SerializeObject(data));
+
             var services = data.Response.Values.Where(s => s.Service.Equals(serviceName, StringComparison.OrdinalIgnoreCase));
+
+            Log.Information("consuleClient return services:" + JsonConvert.SerializeObject(services));
             if (!services.Any())
             {
+                Log.Information("consuleClient ApplicationException: 找不到服务的实例");
                 //Console.WriteLine("找不到服务的实例");
                 throw new ApplicationException("找不到服务的实例");
             }
             else
             {
                 var service = services.ElementAt(Environment.TickCount % services.Count());
-                Console.WriteLine($"{service.Address}:{service.Port}");
+                //Console.WriteLine($"{service.Address}:{service.Port}");
                 ret = "http://" + service.Address + ":" + service.Port;
+                Log.Information("consuleClient have find ip port : " + ret);
             }
 
             return ret;

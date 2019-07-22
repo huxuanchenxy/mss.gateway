@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MSS.API.Dao;
-using MSS.API.Model.DTO;
 using MSS.Common.Consul;
 using MSS.Web.Auth.Infrastructure;
 using MSS.Web.Auth.redis;
@@ -47,7 +40,7 @@ namespace MSS.Web.Auth
             {
                 options.ConnectionString = this.Configuration["redis:ConnectionString"];
             });
-            services.AddDapper(Configuration);
+
             //services.AddRedis(Configuration);
             services.AddEssentialService();
             services.AddConsulService(Configuration);
@@ -55,7 +48,7 @@ namespace MSS.Web.Auth
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime,IOptions<ConsulServiceEntity> consulService)
         {
             if (env.IsDevelopment())
             {
@@ -63,6 +56,7 @@ namespace MSS.Web.Auth
             }
 
             app.UseMvc();
+            //app.RegisterConsul(lifetime, consulService);
         }
     }
 }

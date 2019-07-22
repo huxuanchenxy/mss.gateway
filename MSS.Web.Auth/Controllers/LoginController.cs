@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using MSS.API.Model.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
 using MSS.Web.Auth.Provider;
+using System.Threading.Tasks;
 
 namespace MSS.Web.Auth.Controllers
 {

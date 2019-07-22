@@ -1,19 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using MSS.API.Dao.Interface;
-using MSS.API.Model;
-using MSS.API.Model.Data;
-using MSS.API.Model.DTO;
 using MSS.Common.Consul;
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MSS.Web.Auth.Provider
@@ -25,7 +18,6 @@ namespace MSS.Web.Auth.Provider
         public IConfiguration Configuration { get; }
         //private readonly ILogger<APITokenDataProvider> _logger;
 
-        private readonly IUserRepo<User> _userRepo;
 
         private readonly IDistributedCache _cache;
         private readonly IServiceDiscoveryProvider _consulclient;
@@ -34,11 +26,10 @@ namespace MSS.Web.Auth.Provider
         {
             client = new HttpClient();
         }
-        public APITokenDataProvider(IConfiguration configuration, IUserRepo<User> userRepo, IDistributedCache cache, IServiceDiscoveryProvider consulclient)
+        public APITokenDataProvider(IConfiguration configuration, IDistributedCache cache, IServiceDiscoveryProvider consulclient)
         {
             //_logger = logger;
             Configuration = configuration;
-            _userRepo = userRepo;
             _cache = cache;
             _consulclient = consulclient;
         }
@@ -53,6 +44,13 @@ namespace MSS.Web.Auth.Provider
         public async Task<TokenResponse> GetApiTokenAsync(TokenRequest req)
         {
 
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                //.WriteTo.Console()
+                .WriteTo.File("Logs/auth.log", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            Log.Information("GetApiTokenAsync start");
 
             TokenResponse ret = new TokenResponse();
             var url = Configuration["Ids:url"];
@@ -92,11 +90,15 @@ namespace MSS.Web.Auth.Provider
                 //        throw new Exception("Wrong password");
                 //    }
                 //}
-
+                Log.Information("Call login start");
                 string userurl = await _consulclient.GetServiceAsync("AuthService");
+                Log.Information("Call Consul url:" + userurl);
                 userurl = userurl + "/api/v1/User/Login/" + req.username + "/" + req.password;
+                Log.Information("Call Consul url2:" + userurl);
                 var userresponse = await client.GetAsync(userurl);
                 var userresponseString = await userresponse.Content.ReadAsStringAsync();
+
+                Log.Information("Call login End :" + userresponseString);
                 var userrretobj = JsonConvert.DeserializeObject<ApiRet>(userresponseString);
                 if (userrretobj != null && userrretobj.code != 0)
                 {
@@ -104,9 +106,14 @@ namespace MSS.Web.Auth.Provider
                 }
                 var retuserid = userrretobj.data;
                 //var retuserid = "1";
+
+                Log.Information("Call ids Start ");
+
                 var response = await client.PostAsync(url, data);
                 response.EnsureSuccessStatusCode();
                 var responseString = await response.Content.ReadAsStringAsync();
+
+                Log.Information("Call ids End: " + responseString);
                 ret = JsonConvert.DeserializeObject<TokenResponse>(responseString);
                 
                 if (string.IsNullOrEmpty(ret.error))
@@ -117,10 +124,14 @@ namespace MSS.Web.Auth.Provider
                     //await _cache.SetStringAsync(user.id.ToString(),JsonConvert.SerializeObject(redisobj));
                     //using (var csredis = new CSRedis.CSRedisClient(Configuration["redis:ConnectionString"]))
                     //{
+
+                    Log.Information("Call redis Start: ");
+                    Log.Information("Call redis Token: " + ret.access_token);
+
                     await _cache.SetStringAsync(ret.access_token, retuserid, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(int.Parse(Configuration["redis:ttl"])) });
                     //await _cache.SetStringAsync(user.id.ToString(), JsonConvert.SerializeObject(redisobj),null);
                     //}
-
+                    Log.Information("Call redis End: ");
                 }
                 else
                 {
@@ -133,8 +144,9 @@ namespace MSS.Web.Auth.Provider
             {
                 ret.code = -2;
                 ret.error_description = ex.Message.ToString();
-
+                Log.Error(ex.Message + " " + ex.StackTrace);
             }
+            Log.Information("GetApiTokenAsync End ret : " + ret);
             return ret;
         }
 
