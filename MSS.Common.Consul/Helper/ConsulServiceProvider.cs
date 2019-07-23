@@ -77,9 +77,19 @@ namespace MSS.Common.Consul
             }
             else
             {
-                var service = services.ElementAt(Environment.TickCount % services.Count());
-                //Console.WriteLine($"{service.Address}:{service.Port}");
-                ret = "http://" + service.Address + ":" + service.Port;
+                try
+                {
+                    var service = services.ElementAt(Environment.TickCount % services.Count());
+                    //Console.WriteLine($"{service.Address}:{service.Port}");
+                    ret = "http://" + service.Address + ":" + service.Port;
+                }
+                catch (Exception ex)
+                {
+                    var service = services.ElementAt(0);
+                    //Console.WriteLine($"{service.Address}:{service.Port}");
+                    ret = "http://" + service.Address + ":" + service.Port;
+                    Log.Information(ex.Message.ToString() + ex.StackTrace.ToString());
+                }
                 Log.Information("consuleClient have find ip port : " + ret);
             }
 
