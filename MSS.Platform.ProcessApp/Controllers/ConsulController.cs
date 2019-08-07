@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MSS.Platform.ProcessApp.Data;
+using MSS.Platform.ProcessApp.Model;
 using MSS.Platform.ProcessApp.Service;
 using System.Threading.Tasks;
 
@@ -15,11 +17,13 @@ namespace MSS.Platform.ProcessApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApiResult>> GetServices()
+        public async Task<ActionResult<ApiResult>> GetPageByParm([FromQuery] ConsulServiceEntityParm parm)
         {
             ApiResult ret = new ApiResult { code = Code.Failure };
-            ret = await _consulService.ListServiceAll();
+            ret = await _consulService.GetPageByParm(parm);
             return ret;
         }
+
+
     }
 }

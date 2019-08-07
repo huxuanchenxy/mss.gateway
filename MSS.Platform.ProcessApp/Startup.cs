@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MSS.Platform.ProcessApp.Data;
 using MSS.Platform.ProcessApp.Service;
 
 namespace MSS.Platform.ProcessApp
@@ -33,6 +34,8 @@ namespace MSS.Platform.ProcessApp
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Consul API", Version = "v1" });
 
             });
+            services.AddDapper(Configuration);
+
             services.AddTransient<IConsulService, ConsulService>();
         }
 
