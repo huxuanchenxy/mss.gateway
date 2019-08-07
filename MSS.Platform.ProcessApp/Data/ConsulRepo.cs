@@ -11,6 +11,8 @@ namespace MSS.Platform.ProcessApp.Data
     public interface IConsulRepo<T> where T : BaseEntity
     {
         Task<ConsulServiceEntityView> GetPageList(ConsulServiceEntityParm param);
+        Task<ConsulServiceEntity> GetById(int id);
+        Task<bool> UpdById(ConsulServiceEntity obj);
     }
 
     public class ConsulRepo : BaseRepo, IConsulRepo<ConsulServiceEntity>
@@ -51,7 +53,25 @@ namespace MSS.Platform.ProcessApp.Data
             });
         }
 
+        public async Task<ConsulServiceEntity> GetById(int id)
+        {
+            return await WithConnection(async c =>
+            {
+                string sql = $@" SELECT * FROM consul_services WHERE id = '{id}' ";
+                var data = await c.QueryFirstOrDefaultAsync<ConsulServiceEntity>(sql);
+                return data;
+            });
+        }
 
+        public async Task<bool> UpdById(ConsulServiceEntity obj)
+        {
+            return await WithConnection(async c =>
+            {
+                string sql = $@" UPDATE consul_services SET service_pid= '{obj.ServicePID}' WHERE id = '{obj.ID}' ";
+                await c.ExecuteAsync(sql);
+                return true;
+            });
+        }
     }
 
 }

@@ -24,6 +24,21 @@ namespace MSS.Platform.ProcessApp.Controllers
             return ret;
         }
 
+        [HttpGet("start")]
+        public ActionResult<ApiResult> StartProcess(int id)
+        {
+            ApiResult ret = new ApiResult { code = Code.Failure };
+            ret.data = _consulService.StartProcess(id);
+            return ret;
+        }
+
+        [HttpGet("stop")]
+        public ActionResult<ApiResult> StopProcess(int id)
+        {
+            ApiResult ret = new ApiResult { code = Code.Failure };
+            _consulService.StopProcess(id);
+            return ret;
+        }
 
     }
 }
