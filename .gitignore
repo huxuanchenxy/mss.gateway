@@ -6,3 +6,6 @@ bin
 # user files
 .user
 .suo
+/MSS.Platform.ProcessApp/*.user
+/MSS.Platform.ProcessApp/Properties/PublishProfiles/*.user
+/MSS.Platform.ProcessApp/Properties/PublishProfiles/*.pubxml

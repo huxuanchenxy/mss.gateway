@@ -61,7 +61,11 @@ namespace MSS.Platform.ProcessApp.Service
                                 ServiceAddr = c.ServiceAddr,
                                 ServicePort = c.ServicePort
                             ,
-                                HealthStatus = tt != null ? ConsulServiceStatus.Running : ConsulServiceStatus.Closed
+                                HealthStatus = tt != null ? ConsulServiceStatus.Running : ConsulServiceStatus.Closed,
+                                CreatedTime = c.CreatedTime,
+                                UpdatedTime = c.UpdatedTime,
+                                ID = c.ID,
+                                ServicePID = c.ServicePID
                             };
 
                 data.rows = query.Cast<ConsulServiceEntity>().ToList<ConsulServiceEntity>();
@@ -84,7 +88,7 @@ namespace MSS.Platform.ProcessApp.Service
             //string strInput = Console.ReadLine();
 
             var data = await _repo.GetById(id);
-            string strInput = data.ServiceName + ".bat";
+            string strInput = _configuration["BatPath"] + "\\" + data.ServiceName + ".bat";
             int pid = DOCMD(strInput);
 
             await _repo.UpdById(new ConsulServiceEntity() { ID = id, ServicePID = pid });
@@ -156,7 +160,7 @@ namespace MSS.Platform.ProcessApp.Service
                 /* process already exited */
             }
         }
-       
+
 
     }
 

@@ -24,7 +24,7 @@ namespace MSS.Platform.ProcessApp.Controllers
             return ret;
         }
 
-        [HttpGet("start")]
+        [HttpGet("start/{id}")]
         public ActionResult<ApiResult> StartProcess(int id)
         {
             ApiResult ret = new ApiResult { code = Code.Failure };
@@ -32,7 +32,7 @@ namespace MSS.Platform.ProcessApp.Controllers
             return ret;
         }
 
-        [HttpGet("stop")]
+        [HttpGet("stop/{id}")]
         public ActionResult<ApiResult> StopProcess(int id)
         {
             ApiResult ret = new ApiResult { code = Code.Failure };
