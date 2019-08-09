@@ -88,7 +88,7 @@ namespace MSS.Platform.ProcessApp.Service
             //string strInput = Console.ReadLine();
 
             var data = await _repo.GetById(id);
-            string strInput = _configuration["BatPath"] + "\\" + data.ServiceName + ".bat";
+            string strInput = "cmd /k start " + _configuration["BatPath"] + "\\" + data.ServiceName + ".bat";
             int pid = DOCMD(strInput);
 
             await _repo.UpdById(new ConsulServiceEntity() { ID = id, ServicePID = pid });
@@ -110,11 +110,15 @@ namespace MSS.Platform.ProcessApp.Service
             p.StartInfo.RedirectStandardError = true;
             //不显示程序窗口
             p.StartInfo.CreateNoWindow = false;
+
+            p.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+
+            //p.StartInfo.Arguments = strInput;
             //启动程序
             p.Start();
 
             //向cmd窗口发送输入信息
-            p.StandardInput.WriteLine(strInput + "&exit");
+            p.StandardInput.WriteLine(strInput);
 
             p.StandardInput.AutoFlush = true;
 
@@ -133,10 +137,23 @@ namespace MSS.Platform.ProcessApp.Service
             //var proc = Process.Start(psi);
         }
 
+        private int DOCMD2(string strInput)
+        {
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            startInfo.FileName = "cmd.exe";
+            startInfo.Arguments = strInput;
+            process.StartInfo = startInfo;
+            process.Start();
+            return process.Id;
+        }
+
         public async Task<int> StopProcess(int id)
         {
             var data = await _repo.GetById(id);
-            string strInput = "TASKKILL /T /F /PID " + data.ServicePID;
+            string strInput = "cmd /c TASKKILL /T /F /PID " + data.ServicePID;
+            //string strInput = "/c taskkill /fi \"WINDOWTITLE eq "+data.ServiceName+"*\" /t /f ";
             return DOCMD(strInput);
         }
 
