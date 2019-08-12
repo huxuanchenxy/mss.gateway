@@ -52,9 +52,9 @@ namespace MSS.Platform.ProcessApp.Service
                 data.total = registedservice.total;
                 var dbdatalist = registedservice.rows;
                 var query = from c in dbdatalist
-                            join o in consulhealthlist on c.ServiceName equals o.Service
+                            join o in consulhealthlist on c.ServiceName equals o.Service 
                              into g
-                            from tt in g.DefaultIfEmpty()
+                            from tt in g.Where(o => o.ID == c.ServiceAddr + ":" + c.ServicePort).DefaultIfEmpty()
                             select new ConsulServiceEntity
                             {
                                 ServiceName = c.ServiceName,
