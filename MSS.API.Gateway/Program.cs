@@ -25,6 +25,7 @@ namespace MSS.API.Gateway
                             .UseStartup<Startup>()
                                           .UseKestrel(options =>
                                           {
+                                              options.Limits.MaxRequestBodySize = 524288000;
                                               options.Listen(IPAddress.Any, port);
                                               //options.Listen(IPAddress.Any, 443, listenOptions =>
                                               //{
