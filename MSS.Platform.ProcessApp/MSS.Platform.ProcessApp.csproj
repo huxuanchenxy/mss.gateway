@@ -16,4 +16,8 @@
     <PackageReference Include="System.Management" Version="4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\MSS\commons\MSS.API.Common\MSS.API.Common.csproj" />
+  </ItemGroup>
+
 </Project>

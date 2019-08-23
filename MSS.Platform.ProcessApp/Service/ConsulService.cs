@@ -1,5 +1,6 @@
 ﻿using Consul;
 using Microsoft.Extensions.Configuration;
+using MSS.API.Common.Utility;
 using MSS.Platform.ProcessApp.Data;
 using MSS.Platform.ProcessApp.Model;
 using Newtonsoft.Json;
@@ -152,6 +153,8 @@ namespace MSS.Platform.ProcessApp.Service
         public async Task<int> StopProcess(int id)
         {
             var data = await _repo.GetById(id);
+            string deregistconsul = "http://" + _configuration["ConsulServiceEntity:ConsulIP"] + ":" + _configuration["ConsulServiceEntity:ConsulPort"] + "/v1/agent/service/deregister/" + data.ServiceAddr + ":" + data.ServicePort;
+            HttpClientHelper.PutResponse(deregistconsul, new object());
             string strInput = "cmd /c TASKKILL /T /F /PID " + data.ServicePID;
             //string strInput = "/c taskkill /fi \"WINDOWTITLE eq "+data.ServiceName+"*\" /t /f ";
             return DOCMD(strInput);
