@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MSS.Platform.ProcessApp.Data;
-using MSS.Platform.ProcessApp.Service;
+using MSS.Platform.Monitor.Service;
+using StackExchange.Opserver.Data;
+using System.Threading.Tasks;
 
-namespace MSS.Platform.ProcessApp
+namespace MSS.Platform.Monitor
 {
     public class Startup
     {
@@ -28,16 +29,16 @@ namespace MSS.Platform.ProcessApp
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Consul API", Version = "v1" });
+                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "OpServer API", Version = "v1" });
 
             });
-            services.AddDapper(Configuration);
-            //PollingEngine.Configure(t => Task.Run(t));
-            services.AddTransient<IConsulService, ConsulService>();
+            PollingEngine.Configure(t => Task.Run(t));
+            services.AddTransient<IOpServerService, OpServerService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime)
         {
             if (env.IsDevelopment())
             {
@@ -59,6 +60,10 @@ builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             });
             app.UseHttpsRedirection();
             app.UseMvc();
+            lifetime.ApplicationStopping.Register(() =>
+            {
+                PollingEngine.StopPolling();
+            });
         }
     }
 }

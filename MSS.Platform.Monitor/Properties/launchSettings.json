@@ -4,14 +4,14 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:55682",
-      "sslPort": 44306
+      "sslPort": 0
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "commandLineArgs": "8400",
+      "commandLineArgs": "8401",
       "launchBrowser": true,
       "launchUrl": "api/values",
       "environmentVariables": {
