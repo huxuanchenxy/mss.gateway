@@ -32,7 +32,6 @@ namespace MSS.Platform.Monitor
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "OpServer API", Version = "v1" });
 
             });
-            PollingEngine.Configure(t => Task.Run(t));
             services.AddTransient<IOpServerService, OpServerService>();
 
         }
