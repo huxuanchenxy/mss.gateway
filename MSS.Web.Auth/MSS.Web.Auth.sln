@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSS.Web.Auth", "MSS.Web.Auth.csproj", "{2E06ED97-1AB8-45D5-928C-66AF50330B2D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSS.API.Ids", "..\MSS.API.Ids\MSS.API.Ids.csproj", "{CC160E3A-DF48-419E-B89F-9CF1AF7DA26F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2E06ED97-1AB8-45D5-928C-66AF50330B2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E06ED97-1AB8-45D5-928C-66AF50330B2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E06ED97-1AB8-45D5-928C-66AF50330B2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC160E3A-DF48-419E-B89F-9CF1AF7DA26F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC160E3A-DF48-419E-B89F-9CF1AF7DA26F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC160E3A-DF48-419E-B89F-9CF1AF7DA26F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC160E3A-DF48-419E-B89F-9CF1AF7DA26F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
