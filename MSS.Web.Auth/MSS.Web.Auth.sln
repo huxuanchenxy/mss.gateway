@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSS.Web.Auth", "MSS.Web.Aut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSS.API.Ids", "..\MSS.API.Ids\MSS.API.Ids.csproj", "{CC160E3A-DF48-419E-B89F-9CF1AF7DA26F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSS.API.Gateway", "..\MSS.API.Gateway\MSS.API.Gateway.csproj", "{D5604A46-CDCF-42E8-B94F-02FB8C8DF035}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSS.API.Common", "..\..\MSS\commons\MSS.API.Common\MSS.API.Common.csproj", "{F01D3678-8FF9-4726-8759-F811F54D8093}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{CC160E3A-DF48-419E-B89F-9CF1AF7DA26F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC160E3A-DF48-419E-B89F-9CF1AF7DA26F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC160E3A-DF48-419E-B89F-9CF1AF7DA26F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5604A46-CDCF-42E8-B94F-02FB8C8DF035}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5604A46-CDCF-42E8-B94F-02FB8C8DF035}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5604A46-CDCF-42E8-B94F-02FB8C8DF035}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5604A46-CDCF-42E8-B94F-02FB8C8DF035}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F01D3678-8FF9-4726-8759-F811F54D8093}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F01D3678-8FF9-4726-8759-F811F54D8093}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F01D3678-8FF9-4726-8759-F811F54D8093}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F01D3678-8FF9-4726-8759-F811F54D8093}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
