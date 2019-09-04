@@ -81,6 +81,10 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                 {
                     Log.Information("444");
                     string controllername = urlarr[2];
+                    if (controllername.ToLower() == "system")
+                    {
+                        controllername = urlarr[3];
+                    }
                     string actionname = urlarr[3];
                     string methodname = request.Method.ToString();
                     string header = string.Empty;
@@ -106,7 +110,7 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                     var userid = _cache.GetString(token);
                                     Log.Information("userid:" + userid);
                                     //var userid = "3";
-                                    var userobj = JsonConvert.DeserializeObject<UserTokenResponse>(_cache.GetString(userid));
+                                    //var userobj = JsonConvert.DeserializeObject<UserTokenResponse>(_cache.GetString(userid));
                                     using (HttpClient client = new HttpClient())
                                     {
                                         Log.Information("httpclient start");
@@ -119,8 +123,30 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                         var ip = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
                                         var macaddr = GetMacAddress();
 
-                                        controllername = dic[controllername.ToLower()];
-                                        methodname = dic2[methodname.ToLower()];
+                                        try
+                                        {
+                                            var redisstr = _cache.GetString("InitMenu");
+                                            var redisobj = JsonConvert.DeserializeObject<List<AuthMenu>>(redisstr);
+                                            dic.Clear();
+                                            foreach (var r in redisobj)
+                                            {
+                                                try
+                                                {
+                                                    dic.Add(r.request_url, r.action_name);
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    continue;
+                                                }
+                                            }
+                                        }
+                                        finally { }
+                                        try
+                                        {
+                                            controllername = dic[controllername.ToLower()];
+                                            methodname = dic2[methodname.ToLower()];
+                                        }
+                                        catch { }
                                         string requestContent = request.Content.ReadAsStringAsync().Result;
                                         if (string.IsNullOrEmpty(requestContent))
                                         {
@@ -144,8 +170,9 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                             controller_name = controllername,
                                             action_name = actionname,
                                             method_name = methodname,
-                                            acc_name = userobj.acc_name,
-                                            user_name = userobj.user_name,
+                                            acc_name = userid,
+                                            user_name = userid,
+                                            user_id = int.Parse(userid),
                                             ip = ip,
                                             mac_add = macaddr,
                                             request_description = requestContent,
@@ -223,7 +250,14 @@ namespace MSS.API.Gateway.OcelotMiddlewares
             public int is_del { get; set; }
             public string request_description { get; set; }
             public string response_description { get; set; }
+            public int user_id { get; set; }
 
+        }
+
+        public class AuthMenu
+        {
+            public string action_name { get; set; }
+            public string request_url { get; set; }
         }
 
         public static string LocalMacAddress

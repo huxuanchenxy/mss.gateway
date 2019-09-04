@@ -56,7 +56,7 @@ namespace MSS.Web.Auth
             }
 
             app.UseMvc();
-            //app.RegisterConsul(lifetime, consulService);
+            app.RegisterConsul(lifetime, consulService);
         }
     }
 }

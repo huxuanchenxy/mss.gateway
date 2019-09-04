@@ -38,6 +38,17 @@ namespace MSS.Web.Auth.Controllers
             //return View();
         }
 
+
+        [HttpGet, Route("InitMenu")]
+        public async Task<IActionResult> InitMenu()
+        {
+
+            await _APITokenDataProvider.InitMenu();
+            //string api_key = Constants.Redis_API_Key;
+            //var token = await _cache.GetStringAsync(api_key);
+            return new JsonResult("ok");
+            //return View();
+        }
     }
 
 }

@@ -115,7 +115,7 @@ namespace MSS.Web.Auth.Provider
 
                 Log.Information("Call ids End: " + responseString);
                 ret = JsonConvert.DeserializeObject<TokenResponse>(responseString);
-                
+
                 if (string.IsNullOrEmpty(ret.error))
                 {
                     ret.code = 0;
@@ -206,6 +206,44 @@ namespace MSS.Web.Auth.Provider
 
             }
             return ret;
+        }
+
+        public async Task InitMenu()
+        {
+            string url = await _consulclient.GetServiceAsync("AuthService");
+            url = url + "/api/v1/Action/Menu";
+            var userresponse = await client.GetAsync(url);
+            var userresponseString = await userresponse.Content.ReadAsStringAsync();
+            RetAuthMenu ret = JsonConvert.DeserializeObject<RetAuthMenu>(userresponseString);
+
+            foreach (var r in ret.data)
+            {
+                var enName = r.request_url.Split("/");
+                var key = string.Empty;
+                if (enName.Length == 3)
+                {
+                    key = enName[enName.Length - 1].ToLower();
+                }
+                else if (enName.Length == 4)
+                {
+                    key = enName[enName.Length - 2].ToLower();
+                }
+                r.request_url = key;
+            }
+            var redisvalue = JsonConvert.SerializeObject(ret.data);
+            _cache.SetString("InitMenu", redisvalue);
+
+        }
+
+        public class AuthMenu
+        {
+            public string action_name { get; set; }
+            public string request_url { get; set; }
+        }
+
+        public class RetAuthMenu
+        {
+            public List<AuthMenu> data { get; set; }
         }
     }
 

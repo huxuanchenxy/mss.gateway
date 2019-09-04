@@ -6,5 +6,6 @@ namespace MSS.Web.Auth.Provider
     {
         Task<TokenResponse> GetApiTokenAsync(TokenRequest req);
         Task<TokenResponse> GetApiNewTokenAsync(TokenRequest req);
+        Task InitMenu();
     }
 }
