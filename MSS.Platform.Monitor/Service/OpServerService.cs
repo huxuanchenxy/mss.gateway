@@ -7,19 +7,29 @@ using StackExchange.Opserver.Views;
 using StackExchange.Opserver.Views.Dashboard;
 using StackExchange.Opserver;
 using StackExchange.Profiling;
+using StackExchange.Opserver.Models;
+using Microsoft.Extensions.Configuration;
+using MSS.API.Common.Utility;
+using Newtonsoft.Json;
 
 namespace MSS.Platform.Monitor.Service
 {
     public interface IOpServerService
     {
-        Object GetDashboard(string q);
+        List<ServerInfo> GetDashboard(string q);
+        List<ServerInfo> GetMonitorServer();
     }
-
+    
     public class OpServerService : IOpServerService
     {
-        public static DateTime DefaultStart => DateTime.UtcNow.AddDays(-1);
-        public static DateTime DefaultEnd => DateTime.UtcNow;
-        public Object GetDashboard(string q)
+        public IConfiguration _configuration { get; }
+        public OpServerService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        public static DateTime DefaultStart => DateTime.Now.AddDays(-1);
+        public static DateTime DefaultEnd => DateTime.Now;
+        public List<ServerInfo> GetDashboard(string q)
         {
             var vd = new DashboardModel
             {
@@ -32,22 +42,49 @@ namespace MSS.Platform.Monitor.Service
                           .GroupBy(n => n.Category)
                           .Where(g => g.Any() && (g.Key != DashboardCategory.Unknown || true))
                           .OrderBy(g => g.Key.Index);
-
+            List<ServerInfo> ret = new List<ServerInfo>();
             foreach (var g in categories)
             {
                 var c = g.Key;
-                using (MiniProfiler.Current.Step("Category: " + c.Name))
+
+                foreach (var n in g.OrderBy(n => n.PrettyName))
                 {
-                    foreach (var n in g.OrderBy(n => n.PrettyName))
+                    var tmp = n.CPULoad;
+                    ServerInfo obj = new ServerInfo()
                     {
-                        var tmp = n.CPULoad;
-                    }
+                        PrettyName = n.PrettyName,
+                        CPULoad = n.CPULoad.ToString(),
+                        PrettyMemoryUsed = n.MemoryUsed?.ToSize() ?? "",
+                        PrettyTotalMemory = n.TotalMemory?.ToSize() ?? "",
+                        PercentMemoryUsed = n.PercentMemoryUsed?.ToString("n2"),
+                        PrettyTotalNetwork = n.TotalPrimaryNetworkbps < 0 ? null: n.TotalPrimaryNetworkbps.ToSpeed(),
+                        PrettyTotalVolumePerformance = n.TotalVolumePerformancebps < 0 ? null : n.TotalVolumePerformancebps.ToSpeed(),
+                        DiskText = n.Volumes?.Where(v => v?.PercentUsed.HasValue ?? false).DefaultIfEmpty().Max(v => v?.PercentUsed)?.ToString("n2")
+                    };
+                    ret.Add(obj);
                 }
-                    
+
+
             }
-            var ret = CPUData(vd.Nodes[0]);
+
             return ret;
         }
+
+        public List<ServerInfo> GetMonitorServer()
+        {
+            List<ServerInfo> ret = new List<ServerInfo>();
+            var monitorsArr = _configuration["MonitorServer"].Split(",");
+            foreach (var m in monitorsArr)
+            {
+                string url = "http://" + m + "/api/v1/op/Dashboard";
+                var resp = HttpClientHelper.GetResponse(url);
+                List<ServerInfo> tmp = JsonConvert.DeserializeObject<List<ServerInfo>>(resp);
+                tmp[0].IP = m.Split(":")[0];
+                ret.Add(tmp[0]);
+            }
+            return ret;
+        }
+        
 
         private List<Node> GetNodes(string search) =>
     search.HasValue()

@@ -15,8 +15,8 @@ namespace MSS.Platform.Monitor
         {
             Configuration = configuration;
 
-            //PollingEngine.Configure(t => HostingEnvironment.QueueBackgroundWorkItem(aa => t()));
-            
+            PollingEngine.Configure(t => Task.Run(t));
+
 
         }
 

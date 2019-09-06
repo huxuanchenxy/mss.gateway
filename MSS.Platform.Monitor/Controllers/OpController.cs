@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSS.API.Common;
 using MSS.Platform.Monitor.Service;
+using StackExchange.Opserver.Views.Dashboard;
+using System.Collections.Generic;
 
 namespace MSS.Platform.Monitor.Controllers
 {
@@ -16,10 +18,20 @@ namespace MSS.Platform.Monitor.Controllers
 
 
         [HttpGet("Dashboard")]
-        public ActionResult<ApiResult> Dashboard(string q)
+        public ActionResult<List<ServerInfo>> Dashboard(string q)
         {
-            ApiResult ret = new ApiResult { code = Code.Failure };
-            ret.data = _service.GetDashboard(q);
+            //ApiResult ret = new ApiResult { code = Code.Failure };
+            //ret.data = _service.GetDashboard(q);
+            var ret = _service.GetDashboard(q);
+            return ret;
+        }
+
+        [HttpGet("MonitorServer")]
+        public ActionResult<List<ServerInfo>> MonitorServer()
+        {
+            //ApiResult ret = new ApiResult { code = Code.Failure };
+            //ret.data = _service.GetDashboard(q);
+            var ret = _service.GetMonitorServer();
             return ret;
         }
 
