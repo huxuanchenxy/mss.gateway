@@ -27,11 +27,11 @@ namespace MSS.Platform.Monitor.Controllers
         }
 
         [HttpGet("MonitorServer")]
-        public ActionResult<List<ServerInfo>> MonitorServer()
+        public ActionResult<ApiResult> MonitorServer()
         {
-            //ApiResult ret = new ApiResult { code = Code.Failure };
-            //ret.data = _service.GetDashboard(q);
-            var ret = _service.GetMonitorServer();
+            ApiResult ret = new ApiResult { code = Code.Failure };
+            ret.data = _service.GetMonitorServer();
+            ret.code = Code.Success;
             return ret;
         }
 
