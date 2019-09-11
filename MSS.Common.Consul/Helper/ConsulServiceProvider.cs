@@ -56,7 +56,7 @@ namespace MSS.Common.Consul
 
             string consulurl = "http://" + Configuration["ConsulServiceEntity:ConsulIP"] + ":" + Configuration["ConsulServiceEntity:ConsulPort"];
 
-            Log.Information("Start Find Consul Address");
+            Log.Information("Start Find Consul Address:" + serviceName);
             var consuleClient = new ConsulClient(consulConfig =>
             {
                 consulConfig.Address = new Uri(consulurl);
@@ -71,9 +71,9 @@ namespace MSS.Common.Consul
             Log.Information("consuleClient return services:" + JsonConvert.SerializeObject(services));
             if (!services.Any())
             {
-                Log.Information("consuleClient ApplicationException: 找不到服务的实例");
+                Log.Information("consuleClient ApplicationException: 找不到服务的实例:" + serviceName);
                 //Console.WriteLine("找不到服务的实例");
-                throw new ApplicationException("找不到服务的实例");
+                throw new ApplicationException("找不到服务的实例:" + serviceName);
             }
             else
             {
