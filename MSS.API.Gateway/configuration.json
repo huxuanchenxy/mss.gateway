@@ -5,8 +5,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.204",
-          "Port": 8002
+          "Host": "10.89.36.103",
+          "Port": 8081
         }
       ],
       "UpstreamPathTemplate": "/authapi/{url}",
@@ -26,72 +26,220 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.187",
-          "Port": 3851
-        },
-        {
-          "Host": "10.89.36.187",
-          "Port": 3852
+          "Host": "10.89.36.103",
+          "Port": 8082
         }
       ],
       "UpstreamPathTemplate": "/orgapi/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
       "ReRoutesCaseSensitive": false,
 
-
-      "LoadBalancerOptions": {
-        "Type": "RoundRobin"
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MssServiceKey",
+        "AllowedScopes": [ "MssService" ]
       },
-      "ServiceName": "OrgService",
-      "UseServiceDiscovery": true
-
+      "DelegatingHandlers": [
+        "FakeHandler"
+      ]
     },
-
     {
       "DownstreamPathTemplate": "/idsapi/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.204",
+          "Host": "10.89.36.154",
           "Port": 5100
         }
       ],
       "UpstreamPathTemplate": "/idsapi/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
-      "ReRoutesCaseSensitive": false,
-      "DelegatingHandlers": [
-        "FakeHandler"
-      ]
+      "ReRoutesCaseSensitive": false
     },
     {
       "DownstreamPathTemplate": "/api/v1/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.204",
+          "Host": "10.89.36.154",
           "Port": 8003
         }
       ],
       "UpstreamPathTemplate": "/operlogapi/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
       "ReRoutesCaseSensitive": false
-    },
+    }
+         ,
     {
       "DownstreamPathTemplate": "/api/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.204",
-          "Port": 8004
+          "Host": "10.89.36.103",
+          "Port": 8083
         }
       ],
       "UpstreamPathTemplate": "/areaapi/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
       "ReRoutesCaseSensitive": false,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MssServiceKey",
+        "AllowedScopes": [ "MssService" ]
+      },
       "DelegatingHandlers": [
         "FakeHandler"
       ]
+
     }
+,
+    {
+      "DownstreamPathTemplate": "/api/v1/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.89.36.103",
+          "Port": 8084
+        }
+      ],
+      "UpstreamPathTemplate": "/eqpapi/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "ReRoutesCaseSensitive": false,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MssServiceKey",
+        "AllowedScopes": [ "MssService" ]
+      },
+      "DelegatingHandlers": [
+        "FakeHandler"
+      ]
+
+    }
+,
+    {
+      "DownstreamPathTemplate": "/api/v1/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.89.36.103",
+          "Port": 8085
+        }
+      ],
+      "UpstreamPathTemplate": "/maintainapi/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "ReRoutesCaseSensitive": false,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MssServiceKey",
+        "AllowedScopes": [ "MssService" ]
+      },
+      "DelegatingHandlers": [
+        "FakeHandler"
+      ]
+
+    }
+
+
+,
+    {
+      "DownstreamPathTemplate": "/api/v1/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.89.36.103",
+          "Port": 8400
+        }
+      ],
+      "UpstreamPathTemplate": "/consulapi103/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "ReRoutesCaseSensitive": false,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MssServiceKey",
+        "AllowedScopes": [ "MssService" ]
+      },
+      "DelegatingHandlers": [
+        "FakeHandler"
+      ]
+
+    }
+,
+    {
+      "DownstreamPathTemplate": "/api/v1/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.89.36.160",
+          "Port": 8400
+        }
+      ],
+      "UpstreamPathTemplate": "/consulapi160/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "ReRoutesCaseSensitive": false,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MssServiceKey",
+        "AllowedScopes": [ "MssService" ]
+      },
+      "DelegatingHandlers": [
+        "FakeHandler"
+      ]
+
+    }
+,
+    {
+      "DownstreamPathTemplate": "/api/v1/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.89.36.103",
+          "Port": 8086
+        }
+      ],
+      "UpstreamPathTemplate": "/wmsapi/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "ReRoutesCaseSensitive": false,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MssServiceKey",
+        "AllowedScopes": [ "MssService" ]
+      },
+      "DelegatingHandlers": [
+        "FakeHandler"
+      ]
+
+    }
+,
+    {
+      "DownstreamPathTemplate": "/api/v1/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.89.36.103",
+          "Port": 8088
+        }
+      ],
+      "UpstreamPathTemplate": "/statisticsserviceapi/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "ReRoutesCaseSensitive": false,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "MssServiceKey",
+        "AllowedScopes": [ "MssService" ]
+      },
+      "DelegatingHandlers": [
+        "FakeHandler"
+      ]
+
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "10.89.36.154",
+          "Port": 8401
+        }
+      ],
+      "UpstreamPathTemplate": "/monitorapi/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
+      "ReRoutesCaseSensitive": false
+
+    }
+
+
 
 
 
@@ -101,8 +249,8 @@
   "GlobalConfiguration": {
 
     "ServiceDiscoveryProvider": {
-      "Host": "10.89.36.59",
-      "Port": 8500
+      "Host": "10.89.36.154",
+      "Port": 5800
     }
 
   }
