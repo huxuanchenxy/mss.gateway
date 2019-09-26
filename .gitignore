@@ -9,3 +9,4 @@ bin
 /MSS.Platform.ProcessApp/*.user
 /MSS.Platform.ProcessApp/Properties/PublishProfiles/*.user
 /MSS.Platform.ProcessApp/Properties/PublishProfiles/*.pubxml
+/MSS.API.Ids
