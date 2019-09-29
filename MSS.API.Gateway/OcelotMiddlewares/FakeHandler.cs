@@ -56,7 +56,16 @@ namespace MSS.API.Gateway.OcelotMiddlewares
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             //do stuff and optionally call the base handler..
-
+            var ip = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+            var ippower = _configuration["IPLimit:Power"];
+            if (ippower == "ON")
+            {
+                var iplist = _configuration["IPLimit:IPList"];
+                if (iplist.IndexOf(ip + ",") < 0)
+                {
+                    return new HttpResponseMessage() { StatusCode = HttpStatusCode.Forbidden };
+                }
+            }
             var response = await base.SendAsync(request, cancellationToken);
 
             Log.Logger = new LoggerConfiguration()
@@ -120,7 +129,7 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                         string httpurl = _configuration["operlog:posturl"];
 
 
-                                        var ip = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+
                                         var macaddr = GetMacAddress();
 
                                         try
@@ -160,7 +169,7 @@ namespace MSS.API.Gateway.OcelotMiddlewares
                                             {
                                                 if (retjson.code == Code.Success)
                                                 {
-                                                    responseContent = "操作成功 返回数据:" + JsonConvert.SerializeObject(retjson.data) ;
+                                                    responseContent = "操作成功 返回数据:" + JsonConvert.SerializeObject(retjson.data);
                                                 }
                                             }
                                         }

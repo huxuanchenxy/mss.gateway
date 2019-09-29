@@ -99,7 +99,9 @@ namespace MSS.API.Gateway
 
             services.AddOcelot(Configuration)
                     .AddConsul()
-                    .AddDelegatingHandler<FakeHandler>();
+                    .AddDelegatingHandler<FakeHandler>()
+                    .AddConfigStoredInConsul()
+                    ;
                     
 
             //øÁ”Ú Cors
