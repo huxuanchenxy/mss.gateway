@@ -18,6 +18,7 @@
     },
     "MSS.API.Gateway": {
       "commandName": "Project",
+      "commandLineArgs": "5801",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
