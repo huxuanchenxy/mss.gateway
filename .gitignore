@@ -10,3 +10,7 @@ bin
 /MSS.Platform.ProcessApp/Properties/PublishProfiles/*.user
 /MSS.Platform.ProcessApp/Properties/PublishProfiles/*.pubxml
 /MSS.API.Ids
+/MSS.API.Gateway/Dotfuscator1.xml
+/MSS.API.Gateway/Logs/*.log
+/MSS.API.Gateway/*.xml
+/MSS.Web.Auth/ConsolLogs/*.log
