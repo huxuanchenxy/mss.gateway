@@ -17,6 +17,7 @@ namespace MSS.Platform.ProcessApp.Model
         public string ServiceAddr { get; set; }
         public int ServicePort { get; set; }
         public int ServicePID { get; set; }
+        public string ServiceDll { get; set; }
         
         public ConsulServiceStatus HealthStatus { get; set; }
     }
@@ -47,6 +48,7 @@ namespace MSS.Platform.ProcessApp.Model
             Map(o => o.UpdatedBy).ToColumn("updated_by");
             Map(o => o.UpdatedTime).ToColumn("updated_time");
             Map(o => o.IsDel).ToColumn("is_del");
+            Map(o => o.ServiceDll).ToColumn("service_dll");
         }
     }
 

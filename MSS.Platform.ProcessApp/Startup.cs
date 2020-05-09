@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using MSS.Common.Consul;
 using MSS.Platform.ProcessApp.Data;
 using MSS.Platform.ProcessApp.Service;
 
@@ -34,10 +36,11 @@ namespace MSS.Platform.ProcessApp
             services.AddDapper(Configuration);
             //PollingEngine.Configure(t => Task.Run(t));
             services.AddTransient<IConsulService, ConsulService>();
+            services.AddConsulService(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime, IOptions<ConsulServiceEntity> consulService)
         {
             if (env.IsDevelopment())
             {
@@ -53,6 +56,7 @@ builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseSwagger();
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
             // specifying the Swagger JSON endpoint.
+            app.RegisterConsul(lifetime, consulService);
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Consul API");
