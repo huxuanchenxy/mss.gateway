@@ -92,7 +92,7 @@ namespace MSS.Platform.ProcessApp.Service
             //string strInput = _configuration["BatPath"] + "\\" + data.ServiceName + ".bat";
             string strInput = data.ServiceDll + " " + data.ServicePort;
             int pid = DOCMD2(strInput);
-            await RegisterConsul(id);
+            //await RegisterConsul(id);
             await _repo.UpdById(new ConsulServiceEntity() { ID = id, ServicePID = pid });
             return pid;
         }
