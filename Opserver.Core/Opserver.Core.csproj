@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>StackExchange.Opserver</RootNamespace>
     <AssemblyName>StackExchange.Opserver.Core</AssemblyName>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <CodeAnalysisRuleSet>Opserver.Core.ruleset</CodeAnalysisRuleSet>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
