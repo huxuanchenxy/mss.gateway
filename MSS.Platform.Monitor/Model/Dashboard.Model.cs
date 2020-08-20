@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using StackExchange.Opserver.Data.Dashboard;
+using static StackExchange.Opserver.Data.Dashboard.HardwareSummary;
 
 namespace StackExchange.Opserver.Views.Dashboard
 {
@@ -22,6 +23,7 @@ namespace StackExchange.Opserver.Views.Dashboard
         public string PrettyTotalVolumePerformance { get; set; }
         public string DiskText { get; set; }
         public string IP { get; set; }
+        public List<TemperatureInfo> temps { get; set; }
 
     }
 }

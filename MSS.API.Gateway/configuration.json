@@ -5,7 +5,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.103",
+          "Host": "10.89.34.103",
           "Port": 8081
         }
       ],
@@ -26,7 +26,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.103",
+          "Host": "10.89.34.103",
           "Port": 8082
         }
       ],
@@ -47,7 +47,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.154",
+          "Host": "10.89.34.187",
           "Port": 5100
         }
       ],
@@ -60,7 +60,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.154",
+          "Host": "10.89.34.154",
           "Port": 8003
         }
       ],
@@ -73,8 +73,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.87",
-          "Port": 8183
+          "Host": "10.89.34.103",
+          "Port": 8083
         }
       ],
       "UpstreamPathTemplate": "/areaapi/{url}",
@@ -94,7 +94,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.103",
+          "Host": "10.89.34.103",
           "Port": 8084
         }
       ],
@@ -115,7 +115,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.103",
+          "Host": "10.89.34.103",
           "Port": 8085
         }
       ],
@@ -136,11 +136,11 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.103",
+          "Host": "10.89.34.103",
           "Port": 8400
         }
       ],
-      "UpstreamPathTemplate": "/consulapi103/{url}",
+      "UpstreamPathTemplate": "/consulapi/{url}",
       "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
       "ReRoutesCaseSensitive": false,
       "AuthenticationOptions": {
@@ -157,28 +157,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.160",
-          "Port": 8400
-        }
-      ],
-      "UpstreamPathTemplate": "/consulapi160/{url}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Delete", "Put" ],
-      "ReRoutesCaseSensitive": false,
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "MssServiceKey",
-        "AllowedScopes": [ "MssService" ]
-      },
-      "DelegatingHandlers": [
-        "FakeHandler"
-      ]
-
-    },
-    {
-      "DownstreamPathTemplate": "/api/v1/{url}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "10.89.36.103",
+          "Host": "10.89.34.103",
           "Port": 8086
         }
       ],
@@ -199,7 +178,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.103",
+          "Host": "10.89.34.103",
           "Port": 8088
         }
       ],
@@ -220,7 +199,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.154",
+          "Host": "10.89.34.154",
           "Port": 8401
         }
       ],
@@ -234,7 +213,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.153",
+          "Host": "10.89.34.153",
           "Port": 8443
         }
       ],
@@ -252,7 +231,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "10.89.36.153",
+          "Host": "10.89.34.153",
           "Port": 8442
         }
       ],
@@ -273,7 +252,7 @@
   "GlobalConfiguration": {
 
     "ServiceDiscoveryProvider": {
-      "Host": "10.89.36.152",
+      "Host": "10.89.34.152",
       "Port": 8500
     }
 

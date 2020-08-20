@@ -59,7 +59,8 @@ namespace MSS.Platform.Monitor.Service
                         PercentMemoryUsed = n.PercentMemoryUsed?.ToString("n2"),
                         PrettyTotalNetwork = n.TotalPrimaryNetworkbps < 0 ? null: n.TotalPrimaryNetworkbps.ToSpeed(),
                         PrettyTotalVolumePerformance = n.TotalVolumePerformancebps < 0 ? null : n.TotalVolumePerformancebps.ToSpeed(),
-                        DiskText = n.Volumes?.Where(v => v?.PercentUsed.HasValue ?? false).DefaultIfEmpty().Max(v => v?.PercentUsed)?.ToString("n2")
+                        DiskText = n.Volumes?.Where(v => v?.PercentUsed.HasValue ?? false).DefaultIfEmpty().Max(v => v?.PercentUsed)?.ToString("n2"),
+                        //temps = n.Hardware.Temps
                     };
                     ret.Add(obj);
                 }
@@ -84,7 +85,7 @@ namespace MSS.Platform.Monitor.Service
             }
             return ret;
         }
-        
+
 
         private List<Node> GetNodes(string search) =>
     search.HasValue()

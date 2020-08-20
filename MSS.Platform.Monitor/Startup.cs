@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MSS.Platform.Monitor.Data;
 using MSS.Platform.Monitor.Service;
 using StackExchange.Opserver.Data;
 using System.Threading.Tasks;
+using MSS.API.Common;
 
 namespace MSS.Platform.Monitor
 {
@@ -32,7 +34,12 @@ namespace MSS.Platform.Monitor
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "OpServer API", Version = "v1" });
 
             });
-            services.AddTransient<IOpServerService, OpServerService>();
+            services.AddDapper(Configuration);
+            services.AddEssentialService();
+            services.AddCSRedisCache(options =>
+            {
+                options.ConnectionString = this.Configuration["redis:ConnectionString"];
+            });
 
         }
 

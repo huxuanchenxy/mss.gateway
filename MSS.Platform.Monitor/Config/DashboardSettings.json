@@ -12,27 +12,11 @@
     /* If using WMI, a list of nodes to monitor needs to be provided */
     "wmi": [
       {
-        "nodes": [ "10.89.36.160" ], // List of nodes to monitor
+        "nodes": [ "10.89.34.187" ], // List of nodes to monitor
         "staticDataTimeoutSeconds": 300, // (Optional) How long to cache static data (node name, hardware, etc.) - defaults to 5 minutes
         "dynamicDataTimeoutSeconds": 5, // (Optional) How long to cache dynamic data (utilizations, etc.) - defaults to 30 seconds
         "historyHours": 2 // (Optional) How long to retain data (in memory) - defaults to 24 hours
 
-      },
-      {
-        "nodes": [ "10.89.36.193" ], // List of nodes to monitor
-        "staticDataTimeoutSeconds": 300, // (Optional) How long to cache static data (node name, hardware, etc.) - defaults to 5 minutes
-        "dynamicDataTimeoutSeconds": 5, // (Optional) How long to cache dynamic data (utilizations, etc.) - defaults to 30 seconds
-        "historyHours": 2, // (Optional) How long to retain data (in memory) - defaults to 24 hours
-        "username": "administrator",
-        "password": "ABCabc123"
-      },
-      {
-        "nodes": [ "10.89.36.153" ], // List of nodes to monitor
-        "staticDataTimeoutSeconds": 300, // (Optional) How long to cache static data (node name, hardware, etc.) - defaults to 5 minutes
-        "dynamicDataTimeoutSeconds": 5, // (Optional) How long to cache dynamic data (utilizations, etc.) - defaults to 30 seconds
-        "historyHours": 2, // (Optional) How long to retain data (in memory) - defaults to 24 hours
-        "username": "administrator",
-        "password": "yfzx.2019"
       }
     ]
     /* If using Orion, a host (for links, not API) and a connection string needs to be provided */

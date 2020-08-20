@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MSS.API.Common;
+using MSS.Platform.Monitor.Model;
 using MSS.Platform.Monitor.Service;
 using StackExchange.Opserver.Views.Dashboard;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MSS.Platform.Monitor.Controllers
 {
@@ -11,9 +13,11 @@ namespace MSS.Platform.Monitor.Controllers
     public class OpController : ControllerBase
     {
         private readonly IOpServerService _service;
-        public OpController(IOpServerService service)
+        private readonly IConsulDeviceService _serviceDevice;
+        public OpController(IOpServerService service, IConsulDeviceService serviceDevice)
         {
             _service = service;
+            _serviceDevice = serviceDevice;
         }
 
 
@@ -23,6 +27,18 @@ namespace MSS.Platform.Monitor.Controllers
             //ApiResult ret = new ApiResult { code = Code.Failure };
             //ret.data = _service.GetDashboard(q);
             var ret = _service.GetDashboard(q);
+            return ret;
+        }
+
+        [HttpGet("Dashboard2")]
+        public async Task<ActionResult<ApiResult>> Dashboard2()
+        {
+            ConsulDeviceParm parm = new ConsulDeviceParm();
+            parm.page = 1;
+            parm.rows = 100;
+            parm.order = "asc";
+            parm.sort = "id";
+            var ret = await _serviceDevice.GetPageList(parm);
             return ret;
         }
 
