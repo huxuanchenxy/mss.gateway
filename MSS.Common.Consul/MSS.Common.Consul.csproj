@@ -5,6 +5,7 @@
     <Version>1.0.6</Version>
     <Description>1.兼容core2.0
 2.log增加ServiceName提醒</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
